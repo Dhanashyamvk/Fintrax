@@ -1,0 +1,123 @@
+<html>
+<head>
+    <title>Fintrax Home</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f44336;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 20px 20px;
+        }
+
+        header h1 {
+            margin: 10px 0;
+            font-size: 48px;
+        }
+
+        header h3 {
+            margin-top: 10px;
+            font-weight: 400;
+            color: #ffebee;
+        }
+
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .buttons-container button {
+            background-color: #ffffff;
+            color: #f44336;
+            border: none;
+            padding: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: 80px;
+        }
+
+        .buttons-container button:hover {
+            background-color: #ffebee;
+            transform: translateY(-3px);
+        }
+
+        .logout-button {
+            margin: 30px 0;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #f44336;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #ffebee;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Hi There!</h1>
+        <h1>Welcome to Fintrax</h1>
+        <h3>An AI Powered Finance Tracker</h3>
+    </header>
+
+    <div class="buttons-container">
+        <button onclick="transaction()">Add/Delete<br>Transactions</button>
+        <button onclick="budget()">Set Budget<br>Limits</button>
+        <button onclick="categorize()">Categorize<br>Expenses</button>
+        <button onclick="graphs()">View Graphs</button>
+        <button onclick="patterns()">View Spending<br>Patterns</button>
+        <button onclick="recommendations()">View<br>Recommendations</button>
+    </div>
+
+    <button class="logout-button" onclick="logout()">Logout</button>
+
+    <script>
+        function logout() {
+            window.location.href = "login.html";
+        }
+        function transaction() {
+            window.location.href = "transaction.html";
+        }
+        function budget() {
+            window.location.href = "budget.html";
+        }
+        function categorize() {
+            window.location.href = "categorize.html";
+        }
+        function graphs() {
+            window.location.href = "graphs.html";
+        }
+        function patterns() {
+            window.location.href = "spend.html";
+        }
+        function recommendations() {
+            window.location.href = "recommendations.html";
+        }
+    </script>
+
+</body>
+</html>
