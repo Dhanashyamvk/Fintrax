@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <title>Fintrax Registration</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: red;
+        font-family: Arial, sans-serif;
+      }
+
+      form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        width: 360px;
+      }
+
+      .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .form-row label {
+        width: 120px;
+        font-size: 14px;
+      }
+
+      .form-row input {
+        flex: 1;
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: none;
+        background: #1976d2;
+        color: white;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        filter: brightness(0.95);
+      }
+    </style>
+    <script>
+      async function validateForm(event) {
+        event.preventDefault();
+
+        var name = document.getElementById("name").value;
+        var mob = document.getElementById("mob").value;
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmpassword").value;
+
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return false;
+        }
+
+        const response = await fetch("/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, mob, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert("Registration successful!");
+          window.location.href = data.redirect;
+        } else {
+          alert("Registration failed: " + (data.message || ""));
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <form name="myform" onsubmit="validateForm(event)">
+      <div class="form-row">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+      <div class="form-row">
+        <label for="mob">Mobile No:</label>
+        <input type="tel" id="mob" name="mob" required />
+      </div>
+      <div class="form-row">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="form-row">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <div class="form-row">
+        <label for="confirmpassword">Confirm Password:</label>
+        <input
+          type="password"
+          id="confirmpassword"
+          name="confirmpassword"
+          required
+        />
+      </div>
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>
