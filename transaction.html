@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transactions</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: lch(69.62% 69.26 150.57 / 0.901);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 6px;
+            margin: 4px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        #output {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Transactions</h2>
+
+    <input type="file" id="billInput" accept="image/*">
+
+    <button onclick="document.getElementById('billInput').click()">Choose Bill</button>
+    <button onclick="uploadBill()">Upload & Process</button>
+
+    <div id="output"></div>
+</div>
+
+<script>
+async function uploadBill() {
+    const fileInput = document.getElementById("billInput");
+    if (!fileInput.files.length) {
+        alert("Select a bill first");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("bill", fileInput.files[0]);
+
+    const res = await fetch("/upload-bill", { method: "POST", body: formData });
+    const result = await res.json();
+
+    renderEditableBill(result.data.parsed);
+}
+
+function renderEditableBill(data) {
+    const out = document.getElementById("output");
+
+    out.innerHTML = `
+        <b>Merchant</b>
+        <input class="edit-input" id="merchant" value="${data.vendor}">
+
+        <b>Date</b>
+        <input class="edit-input" type="date" id="date"
+               value="${data.date || new Date().toISOString().split('T')[0]}">
+
+        <table>
+            <tr><th>Item</th><th>Qty</th><th>Price</th></tr>
+            ${data.items.map((i, idx) => `
+                <tr>
+                    <td><input class="edit-input" id="name-${idx}" value="${i.name}"></td>
+                    <td><input class="edit-input" type="number" id="qty-${idx}" value="${i.qty}"
+                        oninput="recalculate(${data.items.length})"></td>
+                    <td><input class="edit-input" type="number" id="price-${idx}" value="${i.price}"
+                        oninput="recalculate(${data.items.length})"></td>
+                </tr>
+            `).join("")}
+        </table>
+
+        <b>Subtotal</b>
+        <input class="edit-input" id="subtotal" value="${data.subtotal || 0}">
+
+        <b>Tax</b>
+        <input class="edit-input" id="tax" value="${data.tax || 0}"
+               oninput="recalculate(${data.items.length})">
+
+        <b>Total</b>
+        <input class="edit-input" id="total" value="${data.total || 0}">
+
+        <button onclick="saveBill(${data.items.length})">Confirm & Save</button>
+    `;
+}
+
+function recalculate(count) {
+    let subtotal = 0;
+
+    for (let i = 0; i < count; i++) {
+        const qty = parseFloat(document.getElementById(`qty-${i}`).value) || 0;
+        const price = parseFloat(document.getElementById(`price-${i}`).value) || 0;
+        subtotal += qty * price;
+    }
+
+    const tax = parseFloat(document.getElementById("tax").value) || 0;
+
+    document.getElementById("subtotal").value = subtotal.toFixed(2);
+    document.getElementById("total").value = (subtotal + tax).toFixed(2);
+}
+
+function saveBill(count) {
+    alert("Transaction saved!");
+}
+</script>
+
+</body>
+</html>
