@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Set Budget Limits</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Lucida Console", "Courier New", monospace;
+            background-color: lch(69.62% 69.26 150.57 / 0.901);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            color: #000;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 420px;
+            margin-top: 60px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        select,
+        input[type="number"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-family: "Lucida Console", "Courier New", monospace;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #ffffff;   /* initial Fintrax button */
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: "Lucida Console", "Courier New", monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: lch(69.62% 69.26 150.57 / 0.901);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Set Category Limits</h2>
+
+        <div class="input-group">
+            <select id="cat">
+                <option>Food</option>
+                <option>Travel</option>
+                <option>Groceries</option>
+                <option>Tech</option>
+                <option>Utilities</option>
+                <option>Shopping</option>
+                <option>Other</option>
+            </select>
+
+            <input type="number" id="catLimit" placeholder="Amount">
+
+            <button onclick="addBudget()">Set Limit</button>
+        </div>
+    </div>
+
+    <script>
+        function addBudget() {
+            alert("Budget limit set!");
+            window.location.href="home.html";
+        }
+    </script>
+</body>
+</html>

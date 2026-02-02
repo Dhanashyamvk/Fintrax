@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fintrax Login</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: lch(69.62% 69.26 150.57 / 0.901);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: "Lucida Console", "Courier New", monospace;
+      color: #000;
+    }
+
+    form {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .row label {
+      width: 100px;
+    }
+
+    .row input {
+      flex: 1;
+      padding: 8px;
+      font-family: "Lucida Console", "Courier New", monospace;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 160px;
+      padding: 10px;
+      font-size: 16px;
+      display: block;
+      margin: 20px auto 10px auto;
+      cursor: pointer;
+      border-radius: 10px;
+      border: none;
+      background-color: #ffffff;
+      color: #000;
+      font-family: "Lucida Console", "Courier New", monospace;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: lch(69.62% 69.26 150.57 / 0.901);
+      transform: translateY(-3px);
+    }
+
+    a {
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+      color: #000;
+      text-decoration: none;
+      font-family: "Lucida Console", "Courier New", monospace;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <script>
+    async function loginUser(event) {
+      event.preventDefault();
+      const mob = document.getElementById("mob").value;
+      const password = document.getElementById("password").value;
+
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mob, password })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        window.location.href = data.redirect;
+      } else {
+        alert("Login failed: " + (data.message || ""));
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <form onsubmit="loginUser(event)">
+    <div class="row">
+      <label for="mob">Mobile No</label>
+      <input id="mob" name="mob" type="tel" required />
+    </div>
+
+    <div class="row">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required />
+    </div> 
+
+    <button type="submit">Log in</button>
+
+    <a href="register.html">Doesn't have an account? Register</a>
+  </form>
+
+</body>
+</html>

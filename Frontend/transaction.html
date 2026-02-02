@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transactions</title>
+
+      <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
+        const firebaseConfig = {
+    apiKey: "AIzaSyD-EEvOdwVGg7prvISv42gdnZlwgaEij_k",
+    authDomain: "fintrax-5a345-a36ae.firebaseapp.com",
+    projectId: "fintrax-5a345-a36ae",
+    storageBucket: "fintrax-5a345-a36ae.firebasestorage.app",
+    messagingSenderId: "1005332618666",
+    appId: "1:1005332618666:web:a394ec374b6f95c0291fd3",
+    measurementId: "G-RH70SY1X0G"
+  };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    </script>
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+    </script>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Lucida Console", "Courier New", monospace;
+        background-color: lch(69.62% 69.26 150.57 / 0.901);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+      }
+
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        width: 950px;
+        margin-top: 40px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      h2 {
+        text-align: center;
+      }
+
+      button {
+        padding: 10px 16px;
+        margin: 5px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background-color: lch(69.62% 69.26 150.57 / 0.901);
+        transform: translateY(-2px);
+      }
+
+      .danger {
+        border: 1px solid #e53935;
+        color: #e53935;
+      }
+
+      input,
+      select {
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-family: inherit;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+      }
+
+      tr.selected {
+        background-color: #ffebee;
+      }
+
+      .edit-input {
+        width: 100%;
+      }
+
+      .section {
+        margin-top: 25px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Transactions</h2>
+
+      <input type="file" id="billInput" accept="image/*" />
+
+      <button onclick="document.getElementById('billInput').click()">
+        Choose Bill
+      </button>
+      <button onclick="uploadBill()">Upload & Process</button>
+      <button onclick="manualTransaction()">Add Transaction</button>
+      <button class="danger" onclick="deleteTransaction()">
+        Delete Transaction
+      </button>
+
+      <!-- TRANSACTION LIST -->
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Merchant</th>
+            <th>Total (₹)</th>
+          </tr>
+        </thead>
+        <tbody id="transactionTable"></tbody>
+      </table>
+
+      <!-- BILL OUTPUT (EARLIER STYLE) -->
+      <div class="section" id="output"></div>
+    </div>
+
+    <script>
+      let transactions = [];
+      let selectedIndex = null;
+      let currentBill = null;
+
+      function renderTransactions() {
+        const tbody = document.getElementById("transactionTable");
+        tbody.innerHTML = "";
+
+        if (transactions.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="3">No transactions added</td></tr>`;
+          return;
+        }
+
+        transactions.forEach((t, i) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${t.date}</td>
+            <td>${t.vendor}</td>
+            <td>${t.total}</td>
+        `;
+          row.onclick = () => selectTransaction(i, row);
+          if (i === selectedIndex) row.classList.add("selected");
+          tbody.appendChild(row);
+        });
+      }
+
+      function selectTransaction(index, row) {
+        selectedIndex = index;
+        document
+          .querySelectorAll("tbody tr")
+          .forEach((r) => r.classList.remove("selected"));
+        row.classList.add("selected");
+      }
+
+      function uploadBill() {
+        const input = document.getElementById("billInput");
+        if (!input.files.length) {
+          alert("Choose a bill first");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("bill", input.files[0]);
+
+        fetch("/upload-bill", {
+          method: "POST",
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            currentBill = result.data.parsed;
+            renderEditableBill(currentBill);
+            input.value = "";
+          });
+      }
+
+      function manualTransaction() {
+        currentBill = {
+          vendor: "",
+          date: new Date().toISOString().split("T")[0],
+          items: [{ name: "", qty: 1, price: 0 }],
+          subtotal: 0,
+          tax: 0,
+          total: 0,
+        };
+        renderEditableBill(currentBill);
+      }
+
+      function renderEditableBill(data) {
+        const out = document.getElementById("output");
+
+        out.innerHTML = `
+        <b>Merchant</b>
+        <input class="edit-input" id="vendor" value="${data.vendor}">
+
+        <b>Date</b>
+        <input class="edit-input" type="date" id="date" value="${data.date}">
+
+        <table>
+            <tr><th>Item</th><th>Qty</th><th>Price</th></tr>
+            ${data.items
+              .map(
+                (i, idx) => `
+                <tr>
+                    <td><input class="edit-input" id="name-${idx}" value="${i.name}"></td>
+                    <td><input class="edit-input" type="number" id="qty-${idx}" value="${i.qty}"
+                        oninput="recalculate(${data.items.length})"></td>
+                    <td><input class="edit-input" type="number" id="price-${idx}" value="${i.price}"
+                        oninput="recalculate(${data.items.length})"></td>
+                </tr>
+            `
+              )
+              .join("")}
+        </table>
+
+        <b>Subtotal</b>
+        <input class="edit-input" id="subtotal" value="${data.subtotal}">
+
+        <b>Tax</b>
+        <input class="edit-input" id="tax" value="${data.tax}"
+            oninput="recalculate(${data.items.length})">
+
+        <b>Total</b>
+        <input class="edit-input" id="total" value="${data.total}">
+
+        <button onclick="saveTransaction()">Save Transaction</button>
+    `;
+      }
+
+      function recalculate(count) {
+        let subtotal = 0;
+        for (let i = 0; i < count; i++) {
+          const qty =
+            parseFloat(document.getElementById(`qty-${i}`).value) || 0;
+          const price =
+            parseFloat(document.getElementById(`price-${i}`).value) || 0;
+          subtotal += qty * price;
+        }
+        const tax = parseFloat(document.getElementById("tax").value) || 0;
+        document.getElementById("subtotal").value = subtotal.toFixed(2);
+        document.getElementById("total").value = (subtotal + tax).toFixed(2);
+      }
+
+      function saveTransaction() {
+        const transaction = {
+        vendor: document.getElementById("vendor").value,
+        date: document.getElementById("date").value,
+        total: Number(document.getElementById("total").value),
+        category: "",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (!transaction.vendor || !transaction.date || !transaction.total) {
+        alert("Fill all fields");
+        return;
+    }
+
+    db.collection("transactions").add(transaction)
+      .then(() => {
+          alert("Transaction saved");
+          document.getElementById("output").innerHTML = "";
+      })
+      .catch(err => {
+          alert("Error saving transaction");
+          console.error(err);
+      });
+}
+
+      function deleteTransaction() {
+        if (selectedIndex === null) {
+          alert("Select a transaction to delete");
+          return;
+        }
+        if (confirm("Delete selected transaction?")) {
+          transactions.splice(selectedIndex, 1);
+          selectedIndex = null;
+          renderTransactions();
+        }
+      }
+
+      renderTransactions();
+    </script>
+  </body>
+</html>

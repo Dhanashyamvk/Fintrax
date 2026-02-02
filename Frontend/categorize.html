@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Categorize Transactions</title>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyD-EEvOdwVGg7prvISv42gdnZlwgaEij_k",
+        authDomain: "fintrax-5a345-a36ae.firebaseapp.com",
+        projectId: "fintrax-5a345-a36ae",
+        storageBucket: "fintrax-5a345-a36ae.firebasestorage.app",
+        messagingSenderId: "1005332618666",
+        appId: "1:1005332618666:web:a394ec374b6f95c0291fd3",
+        measurementId: "G-RH70SY1X0G",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      
+      const db = firebase.firestore();
+    </script>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Lucida Console", "Courier New", monospace;
+        background-color: lch(69.62% 69.26 150.57 / 0.901);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        color: #000;
+      }
+
+      .container {
+        width: 85%;
+        margin-top: 40px;
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: bold;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #ccc;
+        text-align: center;
+      }
+
+      th {
+        background-color: #f7f7f7;
+        font-weight: bold;
+      }
+
+      tr:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+
+      select {
+        padding: 8px;
+        width: 100%;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-family: inherit;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Categorize Transactions</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Merchant</th>
+            <th>Amount (₹)</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody id="categoryTable"></tbody>
+      </table>
+    </div>
+
+    <script>
+      const categories = [
+        "Food",
+        "Travel",
+        "Groceries",
+        "Tech",
+        "Utilities",
+        "Shopping",
+        "Other",
+      ];
+
+      function loadTransactions() {
+        const tbody = document.getElementById("categoryTable");
+
+        db.collection("transactions")
+          .orderBy("createdAt", "desc")
+          .onSnapshot((snapshot) => {
+            tbody.innerHTML = "";
+
+            if (snapshot.empty) {
+              tbody.innerHTML = `<tr><td colspan="4">No transactions found</td></tr>`;
+              return;
+            }
+
+            snapshot.forEach((doc) => {
+              const t = doc.data();
+
+              const row = document.createElement("tr");
+              row.innerHTML = `
+          <td>${t.date}</td>
+          <td>${t.vendor}</td>
+          <td>${t.total}</td>
+          <td>
+            <select onchange="updateCategory('${doc.id}', this.value)">
+              <option value="">Select Category</option>
+              ${categories
+                .map(
+                  (c) =>
+                    `<option ${
+                      t.category === c ? "selected" : ""
+                    }>${c}</option>`
+                )
+                .join("")}
+            </select>
+          </td>
+        `
+        ;
+              tbody.appendChild(row);
+            });
+          });
+      }
+
+      function updateCategory(id, category) {
+        db.collection("transactions").doc(id).update({ category });
+      }
+
+      loadTransactions();
+    </script>
+  </body>
+</html>
