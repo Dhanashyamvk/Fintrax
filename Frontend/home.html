@@ -1,137 +1,312 @@
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Fintrax Home</title>
+
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: lch(69.62% 69.26 150.57 / 0.901);
-            font-family:"Lucida Console", "Courier New", monospace;
-            font:"monaco";
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-        }
+      body {
+        margin: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
+        background: #050c18;
+        color: white;
+        display: flex;
+      }
 
-        header {
-            text-align: center;
-            font-family:"Lucida Console", "Courier New", monospace;
-            font:"monaco";
-            padding: 40px 20px 20px 20px;
-            color: #000000;
-        }
+      .sidebar {
+        width: 260px;
+        background: #020914;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-top: 25px;
+        border-right: 1px solid #0e1a2b;
+      }
 
-        header h1 {
-            margin: 10px 0;
-            font-family:"Lucida Console", "Courier New", monospace;
-            font:"monaco";
-            font-size: 48px;
-            font-weight: 5000;
-            color: #000000;
-        }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 34px;
+        font-weight: bold;
+        color: #21c7ea;
+        padding: 0 25px;
+      }
 
-        header h3 {
-            margin-top: 10px;
-            font-family:"Lucida Console", "Courier New", monospace;
-            font:"monaco";
-            font-weight: 5000;
-            color: #000000;
-        }
+      .menu {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
 
-        .buttons-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            width: 90%;
-            max-width: 800px;
-            margin: 40px auto;
-        }
+      .menu button {
+        background: none;
+        border: none;
+        color: #9db0c3;
+        padding: 16px 25px;
+        text-align: left;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 30px;
+        margin: 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
 
-        .buttons-container button {
-            background-color: #ffffff;
-            color:#000000;
-            border: none;
-            padding: 20px;
-            font-family:"Lucida Console", "Courier New", monospace;
-            font:"monaco";
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            min-height: 80px;
-        }
+      .menu button:hover {
+        background: #0f1b2d;
+      }
 
-        .buttons-container button:hover {
-            background-color: lch(69.62% 69.26 150.57 / 0.901);
-            transform: translateY(-3px);
-        }
+      .menu button.active {
+        background: linear-gradient(90deg, #21c7ea, #1aa4c9);
+        color: #001018;
+        font-weight: 600;
+      }
 
-        .logout-button {
-            margin: 30px 0;
-            padding: 15px 30px;
-            font-family:"Lucida Console", "Courier New", monospace;
-            font:"monaco";
-            font-size: 18px;
-            font-weight: bold;
-            background-color: #ffffff;
-            color: #000000;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+      .logout {
+        margin: 15px;
+        padding: 15px 25px;
+        border: none;
+        background: none;
+        color: #9db0c3;
+        text-align: left;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
 
-        .logout-button:hover {
-            background-color: lch(69.62% 69.26 150.57 / 0.901);
-            transform: translateY(-3px);
-        }
+      .logout:hover {
+        background: #0f1b2d;
+      }
+
+      .main {
+        flex: 1;
+        padding: 35px 45px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .title h1 {
+        margin: 0;
+        font-size: 38px;
+      }
+
+      .title p {
+        margin-top: 5px;
+        color: #8aa0b4;
+      }
+
+      .stats {
+        margin-top: 35px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+      }
+
+      .card {
+        background: linear-gradient(145deg, #101b2e, #0c1626);
+        border-radius: 25px;
+        padding: 28px;
+        border: 1px solid #1b2e46;
+      }
+
+      .card h4 {
+        margin: 0;
+        color: #8aa0b4;
+        font-weight: 500;
+      }
+
+      .card h2 {
+        margin-top: 10px;
+        font-size: 30px;
+      }
+
+      .quick {
+        margin-top: 45px;
+      }
+
+      .quickTitle {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        color: #8aa0b4;
+      }
+
+      .line {
+        flex: 1;
+        height: 1px;
+        background: #16283f;
+      }
+
+      .tiles {
+        margin-top: 25px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+      }
+
+      .tile {
+        background: #0b1626;
+        border-radius: 28px;
+        padding: 35px 25px;
+        cursor: pointer;
+        transition: 0.25s;
+        border: 1px solid transparent;
+      }
+
+      .tile:hover {
+        border: 1px solid #21c7ea;
+      }
+
+      .icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(33, 199, 234, 0.15);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        color: #21c7ea;
+      }
+
+      .tile h3 {
+        margin-top: 18px;
+        margin-bottom: 5px;
+      }
+
+      .tile p {
+        color: #8aa0b4;
+        font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
 
-    <header>
-        <h1>Hi There!</h1>
-        <h1>Welcome to Fintrax</h1>
-        <h3>Track Smart Spend Smarter</h3>
-    </header>
+  <body>
+    <div class="sidebar">
+      <div>
+        <div class="logo">⚡Fintrax</div>
 
-    <div class="buttons-container">
-        <button onclick="transaction()">Add/Delete<br>Transactions</button>
-        <button onclick="budget()">Set Budget<br>Limits</button>
-        <button onclick="categorize()">Categorize<br>Expenses</button>
-        <button onclick="graphs()">View Graphs</button>
-        <button onclick="patterns()">View Spending<br>Patterns</button>
-        <button onclick="recommendations()">View<br>Recommendations</button>
+        <div class="menu">
+          <button class="active">Dashboard</button>
+          <button onclick="transaction()">Transactions</button>
+          <button onclick="budget()">Budget</button>
+          <button onclick="categorize()">Categorize</button>
+          <button onclick="graphs()">Graphs</button>
+          <button onclick="patterns()">Patterns</button>
+          <button onclick="recommendations()">AI Insights</button>
+        </div>
+      </div>
+
+      <button class="logout" onclick="logout()">Logout</button>
     </div>
 
-    <button class="logout-button" onclick="logout()">Logout</button>
+    <div class="main">
+      <div class="topbar">
+        <div class="title">
+          <h1>Dashboard</h1>
+          <p>Welcome back! Here's your financial overview.</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="card">
+          <h4>Total Spent</h4>
+          <h2 id="totalSpent"></h2>
+        </div>
+
+        <div class="card">
+          <h4>Transactions</h4>
+          <h2 id="totalTransactions"></h2>
+        </div>
+
+        <div class="card">
+          <h4>Top Category</h4>
+          <h2 id="topCategory" style="color: #21c7ea"></h2>
+        </div>
+      </div>
+
+      <div class="quick">
+        <div class="quickTitle">
+          <h3>Quick Access</h3>
+          <div class="line"></div>
+        </div>
+
+        <div class="tiles">
+          <div class="tile" onclick="transaction()">
+            <div class="icon"></div>
+            <h3>Transactions</h3>
+            <p>Add or upload receipts</p>
+          </div>
+
+          <div class="tile" onclick="budget()">
+            <div class="icon"></div>
+            <h3>Budget</h3>
+            <p>Set & track limits</p>
+          </div>
+
+          <div class="tile" onclick="categorize()">
+            <div class="icon"></div>
+            <h3>Categorize</h3>
+            <p>Review expenses</p>
+          </div>
+
+          <div class="tile" onclick="graphs()">
+            <div class="icon"></div>
+            <h3>Graphs</h3>
+            <p>Visual analytics</p>
+          </div>
+
+          <div class="tile" onclick="patterns()">
+            <div class="icon"></div>
+            <h3>Patterns</h3>
+            <p>Spending behaviors</p>
+          </div>
+
+          <div class="tile" onclick="recommendations()">
+            <div class="icon"></div>
+            <h3>AI Insights</h3>
+            <p>Smart recommendations</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script>
-        function logout() {
-            window.location.href = "login.html";
-        }
-        function transaction() {
-            window.location.href = "transaction.html";
-        }
-        function budget() {
-            window.location.href = "budget.html";
-        }
-        function categorize() {
-            window.location.href = "categorize.html";
-        }
-        function graphs() {
-            window.location.href = "graphs.html";
-        }
-        function patterns() {
-            window.location.href = "spend.html";
-        }
-        function recommendations() {
-            window.location.href = "recommendations.html";
-        }
+      function logout() {
+        window.location.href = "login.html";
+      }
+      function transaction() {
+        window.location.href = "transaction.html";
+      }
+      function budget() {
+        window.location.href = "budget.html";
+      }
+      function categorize() {
+        window.location.href = "categorize.html";
+      }
+      function graphs() {
+        window.location.href = "graphs.html";
+      }
+      function patterns() {
+        window.location.href = "spend.html";
+      }
+      function recommendations() {
+        window.location.href = "recommendations.html";
+      }
     </script>
-
-</body>
+  </body>
 </html>
