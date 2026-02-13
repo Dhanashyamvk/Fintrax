@@ -31,38 +31,44 @@ async function extractAndParseBill({ imagePath }) {
 
   return {
     rawText: data.text,
-    parsed: parseBill(data.text)
+    parsed: parseBill(data.text),
   };
 }
 
 function parseBill(rawText) {
   const lines = rawText
     .split("\n")
-    .map(l => l.trim())
+    .map((l) => l.trim())
     .filter(Boolean);
+
+  const items = getItems(lines);
 
   return {
     vendor: getVendor(lines),
     date: getDate(lines),
-    items: getItems(lines),
-    subtotal: getSubtotal(lines),
+    items,
+    subtotal: getSubtotal(lines, items),
     tax: getTax(lines),
     total: getTotal(lines),
-    payment_mode: getPaymentMode(lines)
+    payment_mode: getPaymentMode(lines),
   };
 }
 
 function getVendor(lines) {
   for (const l of lines.slice(0, 6)) {
-    if (!/@|www|\.com|gst|phone/i.test(l) && /[A-Za-z]{3,}/.test(l)) {
-      return l;
+    if (
+      !/gst|invoice|bill|date|phone|www|@|address|room/i.test(l) &&
+      /[A-Za-z]{4,}/.test(l)
+    ) {
+      return l.replace(/[^A-Za-z0-9\s.&]/g, "").trim();
     }
   }
   return "Unknown";
 }
 
 function getDate(lines) {
-  const r = /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})|([A-Za-z]+\s\d{1,2},\s\d{4})/;
+  const r =
+    /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})|([A-Za-z]{3,}\s\d{1,2},?\s\d{4})/;
   for (const l of lines) {
     const m = l.match(r);
     if (m) return m[0];
@@ -73,57 +79,109 @@ function getDate(lines) {
 function getItems(lines) {
   const items = [];
 
+  const rejectPatterns =
+    /address|road|cross|main|street|city|state|country|phone|email|guest|contact|invoice|bill no|receipt|pax|room no|date|time|thank|visit|payment|refund|gst|tax|subtotal|total/i;
+
   for (const line of lines) {
-    if (/subtotal|total|tax|gst|cgst|sgst|cash|upi|card/i.test(line)) continue;
-    if (/@|www|\.com|invoice|bill/i.test(line)) continue;
+    const lower = line.toLowerCase();
+
+    if (rejectPatterns.test(lower)) continue;
+    if (!/[a-zA-Z]/.test(line)) continue;
 
     const nums = line.match(/\d+(\.\d+)?/g);
-    if (!nums || nums.length === 0) continue;
+    if (!nums) continue;
 
     const price = Number(nums[nums.length - 1]);
-    const qty = nums.length > 1 ? Number(nums[0]) : 1;
+    if (!price || price <= 0 || price > 50000) continue;
 
-    const name = line.replace(/[0-9.,]/g, "").trim();
-    if (name.length < 3) continue;
+    let qty = 1;
+    const qtyMatch = line.match(
+      /(\d+)\s*(x|pcs|tabs|tablets|caps|qty|nights)/i,
+    );
+    if (qtyMatch) qty = Number(qtyMatch[1]);
 
-    items.push({ name, qty, price });
+    let name = line
+      .replace(/\$?\s*\d+(\.\d+)?/g, "")
+      .replace(/[-_/|]+/g, "")
+      .trim();
+
+    name = name.replace(/([a-z])([A-Z])/g, "$1 $2");
+
+    if (/\b[a-z]+\s*(com|net|org|in)\b/i.test(name)) continue;
+    if (/@|www|\.com|\.in|\.org|http|email|contact|guest/i.test(name)) continue;
+    if (/\b(com|net|org|in)\b/i.test(name) && name.split(" ").length <= 4)
+      continue;
+
+    if (name.length < 8) continue;
+    if (!/[aeiou]{1}/i.test(name)) continue;
+    if (name.split(" ").length < 2) continue;
+    if (name.replace(/\s/g, "").length < 10) continue;
+    if (/[A-Z]{1,2}\s[A-Z]/.test(name)) continue;
+
+    items.push({
+      name,
+      qty,
+      price,
+    });
   }
+
   return items;
 }
 
-function getSubtotal(lines) {
+function getSubtotal(lines, items) {
   for (const l of lines) {
-    const m = l.match(/subtotal\s*[:\-]?\s*([0-9.]+)/i);
+    const m = l.match(/subtotal\s*[:\-]?\s*[$₹]?\s*([0-9.]+)/i);
     if (m) return Number(m[1]);
   }
-
-  const items = getItems(lines);
-  return items.reduce((s, i) => s + i.qty * i.price, 0);
+  return items.reduce((sum, i) => sum + (i.price || 0), 0);
 }
 
 function getTax(lines) {
-  let tax = 0;
-  for (const l of lines) {
-    if (/tax|gst|cgst|sgst|vat/i.test(l)) {
-      const nums = l.match(/\d+(\.\d+)?/g);
-      if (nums) tax += Number(nums[nums.length - 1]);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].toLowerCase();
+
+    if (/tax|gst|vat|fees/.test(line)) {
+      let nums = lines[i].match(/\d+(\.\d+)?/g);
+      if (nums && nums.length) {
+        return Number(nums[nums.length - 1]);
+      }
+
+      if (lines[i + 1]) {
+        nums = lines[i + 1].match(/\d+(\.\d+)?/g);
+        if (nums && nums.length) {
+          return Number(nums[0]);
+        }
+      }
     }
   }
-  return tax;
+  return null;
 }
 
 function getTotal(lines) {
-  for (const l of lines) {
-    const m = l.match(/\btotal\b\s*[:\-]?\s*([0-9.]+)/i);
-    if (m) return Number(m[1]);
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const line = lines[i].toLowerCase();
+
+    if (/total|amount due|balance due|grand total/.test(line)) {
+      let nums = lines[i].match(/\d+(\.\d+)?/g);
+      if (nums && nums.length) {
+        return Number(nums[nums.length - 1]);
+      }
+
+      if (lines[i + 1]) {
+        nums = lines[i + 1].match(/\d+(\.\d+)?/g);
+        if (nums && nums.length) {
+          return Number(nums[0]);
+        }
+      }
+    }
   }
-  return getSubtotal(lines) + getTax(lines);
+  return null;
 }
 
 function getPaymentMode(lines) {
   const text = lines.join(" ").toLowerCase();
   if (/upi|gpay|phonepe|paytm/.test(text)) return "UPI";
-  if (/credit|debit/.test(text)) return "Card";
+  if (/credit|debit|visa|master/i.test(text)) return "Card";
   if (/cash/.test(text)) return "Cash";
   return "Unknown";
 }
