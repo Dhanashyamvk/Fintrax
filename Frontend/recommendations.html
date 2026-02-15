@@ -1,145 +1,235 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Recommendations | Fintrax</title>
 
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: lch(69.62% 69.26 150.57 / 0.901);
-            font-family: "Lucida Console", "Courier New", monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #000;
-            min-height: 100vh;
-        }
+      body {
+        margin: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
+        background: #050c18;
+        color: white;
+        display: flex;
+      }
 
-        header {
-            text-align: center;
-            padding: 40px 20px 20px;
-        }
+      .sidebar {
+        width: 260px;
+        background: #020914;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-top: 25px;
+        border-right: 1px solid #0e1a2b;
+      }
 
-        header h1 {
-            margin: 10px 0;
-            font-size: 36px;
-            font-weight: bold;
-        }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 34px;
+        font-weight: bold;
+        color: #21c7ea;
+        padding: 0 25px;
+      }
 
-        header h3 {
-            margin-top: 10px;
-            font-weight: normal;
-        }
+      .menu {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
 
-        .container {
-            background: white;
-            color: #000;
-            width: 90%;
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-        }
+      .menu button {
+        background: none;
+        border: none;
+        color: #9db0c3;
+        padding: 16px 25px;
+        text-align: left;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 30px;
+        margin: 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
 
-        .recommendation {
-            background: #f7f7f7;
-            padding: 18px;
-            border-radius: 14px;
-            margin-bottom: 15px;
-            font-size: 16px;
-            line-height: 1.5;
-        }
+      .menu button:hover {
+        background: #0f1b2d;
+      }
 
-        .recommendation span {
-            font-weight: bold;
-            color: rgba(21, 195, 105, 0.901);
-        }
+      .menu button.active {
+        background: linear-gradient(90deg, #21c7ea, #1aa4c9);
+        color: #001018;
+        font-weight: 600;
+      }
 
-        .back-btn {
-            margin: 30px 0;
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            background-color: #ffffff;
-            color: #000;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: "Lucida Console", "Courier New", monospace;
-        }
+      .logout {
+        margin: 15px;
+        padding: 15px 25px;
+        border: none;
+        background: none;
+        color: #9db0c3;
+        text-align: left;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
 
-        .back-btn:hover {
-            background-color: lch(69.62% 69.26 150.57 / 0.901);
-            transform: translateY(-3px);
-        }
+      .logout:hover {
+        background: #0f1b2d;
+      }
+
+      .main {
+        flex: 1;
+        padding: 35px 45px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .title h1 {
+        margin: 0;
+        font-size: 38px;
+      }
+
+      .title p {
+        margin-top: 5px;
+        color: #8aa0b4;
+      }
+
+      .card {
+        background: linear-gradient(145deg, #101b2e, #0c1626);
+        border-radius: 25px;
+        padding: 28px;
+        border: 1px solid #1b2e46;
+        margin-top: 35px;
+      }
+
+      .recommendation {
+        background: #0b1626;
+        border: 1px solid #1b2e46;
+        padding: 18px;
+        border-radius: 18px;
+        margin-bottom: 15px;
+        color: #c7d7ea;
+      }
+
+      .recommendation span {
+        color: #21c7ea;
+        font-weight: 600;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
+    <div class="sidebar">
+      <div>
+        <div class="logo">⚡Fintrax</div>
 
-<header>
-    <h1>Smart Recommendations</h1>
-    <h3>Improve your spending habits</h3>
-</header>
+        <div class="menu">
+          <button onclick="home()">Dashboard</button>
+          <button onclick="transaction()">Transactions</button>
+          <button onclick="budget()">Budget</button>
+          <button onclick="categorize()">Categorize</button>
+          <button onclick="graphs()">Graphs</button>
+          <button onclick="patterns()">Patterns</button>
+          <button class="active">AI Insights</button>
+        </div>
+      </div>
 
-<div class="container" id="recommendationsBox">
-    <!-- Recommendations will load here -->
-</div>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
 
-<button class="back-btn" onclick="goBack()">Back to Dashboard</button>
+    <div class="main">
+      <div class="topbar">
+        <div class="title">
+          <h1>Smart Recommendations</h1>
+          <p>Improve your spending habits</p>
+        </div>
+      </div>
 
-<script>
-    // Sample spending data (later connect to backend)
-    const expenses = [
-        { category: "Food", amount: 4500 },
-        { category: "Shopping", amount: 6800 },
-        { category: "Transport", amount: 2200 },
-        { category: "Bills", amount: 3000 }
-    ];
+      <div class="card" id="recommendationsBox"></div>
+    </div>
 
-    function generateRecommendations() {
+    <script>
+      function logout() {
+        window.location.href = "login.html";
+      }
+      function home() {
+        window.location.href = "home.html";
+      }
+      function transaction() {
+        window.location.href = "transaction.html";
+      }
+      function budget() {
+        window.location.href = "budget.html";
+      }
+      function categorize() {
+        window.location.href = "categorize.html";
+      }
+      function graphs() {
+        window.location.href = "graphs.html";
+      }
+      function patterns() {
+        window.location.href = "spend.html";
+      }
+
+      async function generateRecommendations() {
+        const userId = localStorage.getItem("userId");
         const box = document.getElementById("recommendationsBox");
+
+        const res = await fetch(`/recommendations-data?userId=${userId}`);
+        const data = await res.json();
+
         box.innerHTML = "";
 
-        expenses.forEach(e => {
-            if (e.amount > 5000) {
-                box.innerHTML += `
-                    <div class="recommendation">
-                        ⚠ You are spending heavily on <span>${e.category}</span>.
-                        Try setting a monthly limit to save more.
-                    </div>
-                `;
-            }
+        if (!data.data || data.data.length === 0) {
+          box.innerHTML = `<div class="recommendation">No spending data available yet.</div>`;
+          return;
+        }
+
+        data.data.forEach((e) => {
+          if (e.amount > 5000) {
+            box.innerHTML += `
+<div class="recommendation">
+⚠ You are spending heavily on <span>${e.category}</span>. Try setting a monthly limit to save more.
+</div>
+`;
+          }
         });
 
         box.innerHTML += `
-            <div class="recommendation">
-                💡 Track your expenses daily to avoid last-minute overspending.
-            </div>
-        `;
+<div class="recommendation">
+💡 Track your expenses daily to avoid last-minute overspending.
+</div>
+`;
 
         box.innerHTML += `
-            <div class="recommendation">
-                💰 Consider allocating at least <span>20%</span> of your income to savings.
-            </div>
-        `;
+<div class="recommendation">
+💰 Consider allocating at least <span>20%</span> of your income to savings.
+</div>
+`;
 
         box.innerHTML += `
-            <div class="recommendation">
-                📊 Review your spending patterns every month for better control.
-            </div>
-        `;
-    }
+<div class="recommendation">
+📊 Review your spending patterns every month for better control.
+</div>
+`;
+      }
 
-    function goBack() {
-        window.location.href = "home.html";
-    }
-
-    generateRecommendations();
-</script>
-
-</body>
+      generateRecommendations();
+    </script>
+  </body>
 </html>
