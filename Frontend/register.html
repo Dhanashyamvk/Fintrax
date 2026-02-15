@@ -1,136 +1,146 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>Fintrax Registration</title>
+  <head>
+    <title>Fintrax Registration</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: lch(69.62% 69.26 150.57 / 0.901);
-      font-family: "Lucida Console", "Courier New", monospace;
-      color: #000;
-    }
-
-    form {
-      background: white;
-      padding: 35px;
-      border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-      width: 380px;
-    }
-
-    .form-row {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .form-row label {
-      width: 140px;
-      font-size: 14px;
-    }
-
-    .form-row input {
-      flex: 1;
-      padding: 8px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-family: "Lucida Console", "Courier New", monospace;
-    }
-
-    input[type="submit"] {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 10px;
-      border: none;
-      background-color: #ffffff;   /* initial Fintrax button */
-      color: #000;
-      cursor: pointer;
-      font-family: "Lucida Console", "Courier New", monospace;
-      transition: all 0.3s ease;
-      margin-top: 10px;
-    }
-
-    input[type="submit"]:hover {
-      background-color: lch(69.62% 69.26 150.57 / 0.901);
-      transform: translateY(-3px);
-    }
-  </style>
-
-  <script>
-    async function validateForm(event) {
-      event.preventDefault();
-
-      var name = document.getElementById("name").value;
-      var mob = document.getElementById("mob").value;
-      var email = document.getElementById("email").value;
-      var password = document.getElementById("password").value;
-      var confirmPassword = document.getElementById("confirmpassword").value;
-
-      if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return false;
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(90deg, #0a1626, #081220);
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
+        color: white;
       }
 
-      const response = await fetch("/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, mob, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert("Registration successful!");
-        window.location.href = data.redirect;
-      } else {
-        alert("Registration failed: " + (data.message || ""));
+      form {
+        background: linear-gradient(145deg, #101b2e, #0c1626);
+        padding: 40px;
+        border-radius: 28px;
+        border: 1px solid #1b2e46;
+        width: 420px;
       }
-    }
-  </script>
-</head>
 
-<body>
-  <form name="myform" onsubmit="validateForm(event)">
-    <div class="form-row">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required />
-    </div>
+      .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 18px;
+      }
 
-    <div class="form-row">
-      <label for="mob">Mobile No:</label>
-      <input type="tel" id="mob" name="mob" required />
-    </div>
+      .form-row label {
+        width: 140px;
+        font-size: 14px;
+        color: #9db0c3;
+      }
 
-    <div class="form-row">
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required />
-    </div>
+      .form-row input {
+        flex: 1;
+        padding: 12px;
+        font-size: 14px;
+        border: 1px solid #1b2e46;
+        border-radius: 14px;
+        background: #07121f;
+        color: #c7d7ea;
+        outline: none;
+      }
 
-    <div class="form-row">
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
-    </div>
+      .form-row input:focus {
+        border-color: #21c7ea;
+      }
 
-    <div class="form-row">
-      <label for="confirmpassword">Confirm Password:</label>
-      <input
-        type="password"
-        id="confirmpassword"
-        name="confirmpassword"
-        required
-      />
-    </div>
+      input[type="submit"] {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 18px;
+        border: none;
+        background: #1fb6d9;
+        color: #001018;
+        cursor: pointer;
+        transition: 0.25s;
+        margin-top: 12px;
+      }
 
-    <input type="submit" value="Submit" />
-  </form>
-</body>
+      input[type="submit"]:hover {
+        transform: translateY(-2px);
+      }
+    </style>
+
+    <script>
+      async function validateForm(event) {
+        event.preventDefault();
+
+        var name = document.getElementById("name").value;
+        var mob = document.getElementById("mob").value;
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmpassword").value;
+
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return false;
+        }
+
+        const response = await fetch("/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, mob, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert("Registration successful!");
+          window.location.href = data.redirect;
+        } else {
+          alert("Registration failed: " + (data.message || ""));
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <form name="myform" onsubmit="validateForm(event)">
+      <div class="form-row">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+
+      <div class="form-row">
+        <label for="mob">Mobile No:</label>
+        <input type="tel" id="mob" name="mob" required />
+      </div>
+
+      <div class="form-row">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+
+      <div class="form-row">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+
+      <div class="form-row">
+        <label for="confirmpassword">Confirm Password:</label>
+        <input
+          type="password"
+          id="confirmpassword"
+          name="confirmpassword"
+          required
+        />
+      </div>
+
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
 </html>
