@@ -307,6 +307,20 @@
       function recommendations() {
         window.location.href = "recommendations.html";
       }
+
+      async function loadDashboard() {
+        const userId = localStorage.getItem("userId");
+
+        const res = await fetch(`/dashboard-data?userId=${userId}`);
+        const data = await res.json();
+
+        document.getElementById("totalSpent").innerText = "₹" + data.totalSpent;
+        document.getElementById("totalTransactions").innerText =
+          data.totalTransactions;
+        document.getElementById("topCategory").innerText = data.topCategory;
+      }
+
+      loadDashboard();
     </script>
   </body>
 </html>
