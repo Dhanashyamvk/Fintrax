@@ -1,108 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <title>Transactions</title>
-
-      <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
-        const firebaseConfig = {
-    apiKey: "AIzaSyD-EEvOdwVGg7prvISv42gdnZlwgaEij_k",
-    authDomain: "fintrax-5a345-a36ae.firebaseapp.com",
-    projectId: "fintrax-5a345-a36ae",
-    storageBucket: "fintrax-5a345-a36ae.firebasestorage.app",
-    messagingSenderId: "1005332618666",
-    appId: "1:1005332618666:web:a394ec374b6f95c0291fd3",
-    measurementId: "G-RH70SY1X0G"
-  };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    </script>
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-    </script>
-
+    <title>Transactions | Fintrax</title>
     <style>
       body {
         margin: 0;
-        padding: 0;
-        font-family: "Lucida Console", "Courier New", monospace;
-        background-color: lch(69.62% 69.26 150.57 / 0.901);
+        font-family:
+          system-ui,
+          apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
+        background: #050c18;
+        color: white;
         display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        min-height: 100vh;
       }
-
-      .container {
-        background: white;
-        padding: 30px;
-        border-radius: 20px;
-        width: 950px;
-        margin-top: 40px;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+      .sidebar {
+        width: 260px;
+        background: #020914;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-top: 25px;
+        border-right: 1px solid #0e1a2b;
       }
-
-      h2 {
-        text-align: center;
-      }
-
-      button {
-        padding: 10px 16px;
-        margin: 5px;
-        background-color: #ffffff;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-family: inherit;
+      .logo {
+        font-size: 34px;
         font-weight: bold;
-        transition: 0.3s;
+        color: #21c7ea;
+        padding: 0 25px;
       }
-
-      button:hover {
-        background-color: lch(69.62% 69.26 150.57 / 0.901);
-        transform: translateY(-2px);
+      .menu {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
       }
-
-      .danger {
-        border: 1px solid #e53935;
-        color: #e53935;
+      .menu button {
+        background: none;
+        border: none;
+        color: #9db0c3;
+        padding: 16px 25px;
+        text-align: left;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 30px;
+        margin: 0 12px;
       }
-
-      input,
-      select {
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-family: inherit;
+      .menu button:hover {
+        background: #0f1b2d;
       }
-
-      input[type="file"] {
-        display: none;
+      .menu button.active {
+        background: linear-gradient(90deg, #21c7ea, #1aa4c9);
+        color: #001018;
+        font-weight: 600;
       }
-
+      .logout {
+        margin: 15px;
+        padding: 15px 25px;
+        border: none;
+        background: none;
+        color: #9db0c3;
+        cursor: pointer;
+      }
+      .main {
+        flex: 1;
+        padding: 35px 45px;
+      }
+      .title h1 {
+        margin: 0;
+        font-size: 38px;
+      }
+      .title p {
+        margin-top: 5px;
+        color: #8aa0b4;
+      }
+      .card {
+        background: linear-gradient(145deg, #101b2e, #0c1626);
+        border-radius: 25px;
+        padding: 28px;
+        border: 1px solid #1b2e46;
+        margin-top: 35px;
+      }
+      button.action {
+        padding: 12px 18px;
+        border-radius: 14px;
+        border: none;
+        background: linear-gradient(90deg, #21c7ea, #1aa4c9);
+        color: #001018;
+        font-weight: 600;
+        cursor: pointer;
+        margin-right: 10px;
+      }
       table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 15px;
+        margin-top: 20px;
       }
-
       th,
       td {
-        padding: 8px;
-        border-bottom: 1px solid #ddd;
+        padding: 14px;
+        border-bottom: 1px solid #1b2e46;
         text-align: center;
+        color: #c7d7ea;
       }
-
+      th {
+        color: #8aa0b4;
+        font-weight: 500;
+      }
+      tr:hover {
+        background: #0b1626;
+      }
       tr.selected {
-        background-color: #ffebee;
+        background: #0b1626;
+      }
+      input,
+      select {
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid #1b2e46;
+        background: #0b1626;
+        color: white;
       }
 
       .edit-input {
         width: 100%;
+        margin-bottom: 10px;
       }
-
       .section {
         margin-top: 25px;
       }
@@ -110,73 +135,111 @@
   </head>
 
   <body>
-    <div class="container">
-      <h2>Transactions</h2>
+    <div class="sidebar">
+      <div>
+        <div class="logo">⚡Fintrax</div>
+        <div class="menu">
+          <button onclick="home()">Dashboard</button>
+          <button class="active">Transactions</button>
+          <button onclick="budget()">Budget</button>
+          <button onclick="categorize()">Categorize</button>
+          <button onclick="graphs()">Graphs</button>
+          <button onclick="patterns()">Patterns</button>
+          <button onclick="recommendations()">AI Insights</button>
+        </div>
+      </div>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
 
-      <input type="file" id="billInput" accept="image/*" />
+    <div class="main">
+      <div class="title">
+        <h1>Transactions</h1>
+        <p>Add, upload and manage your expenses</p>
+      </div>
 
-      <button onclick="document.getElementById('billInput').click()">
-        Choose Bill
-      </button>
-      <button onclick="uploadBill()">Upload & Process</button>
-      <button onclick="manualTransaction()">Add Transaction</button>
-      <button class="danger" onclick="deleteTransaction()">
-        Delete Transaction
-      </button>
+      <div class="card">
+        <input type="file" id="billInput" accept="image/*" hidden />
 
-      <!-- TRANSACTION LIST -->
-      <table>
-        <thead>
+        <button
+          class="action"
+          onclick="document.getElementById('billInput').click()"
+        >
+          Choose Bill
+        </button>
+        <button class="action" onclick="uploadBill()">Upload & Process</button>
+        <button class="action" onclick="manualTransaction()">
+          Add Transaction
+        </button>
+        <button class="action" onclick="deleteTransaction()">
+          Delete Transaction
+        </button>
+
+        <table>
           <tr>
             <th>Date</th>
             <th>Merchant</th>
             <th>Total (₹)</th>
           </tr>
-        </thead>
-        <tbody id="transactionTable"></tbody>
-      </table>
+          <tbody id="transactionTable"></tbody>
+        </table>
 
-      <!-- BILL OUTPUT (EARLIER STYLE) -->
-      <div class="section" id="output"></div>
+        <div class="section" id="output"></div>
+      </div>
     </div>
 
     <script>
+      function logout() {
+        window.location.href = "login.html";
+      }
+      function home() {
+        window.location.href = "home.html";
+      }
+      function budget() {
+        window.location.href = "budget.html";
+      }
+      function categorize() {
+        window.location.href = "categorize.html";
+      }
+      function graphs() {
+        window.location.href = "graphs.html";
+      }
+      function patterns() {
+        window.location.href = "spend.html";
+      }
+      function recommendations() {
+        window.location.href = "recommendations.html";
+      }
+
       let transactions = [];
       let selectedIndex = null;
       let currentBill = null;
 
+      function formatDateForInput(dateStr) {
+        if (!dateStr) return "";
+        const d = new Date(dateStr);
+        if (isNaN(d)) return "";
+        return d.toISOString().split("T")[0];
+      }
+
       function renderTransactions() {
         const tbody = document.getElementById("transactionTable");
         tbody.innerHTML = "";
-
         if (transactions.length === 0) {
           tbody.innerHTML = `<tr><td colspan="3">No transactions added</td></tr>`;
           return;
         }
-
         transactions.forEach((t, i) => {
           const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${t.date}</td>
-            <td>${t.vendor}</td>
-            <td>${t.total}</td>
-        `;
+          row.innerHTML = `<td>${t.date}</td><td>${t.vendor}</td><td>${t.total}</td>`;
           row.onclick = () => selectTransaction(i, row);
           if (i === selectedIndex) row.classList.add("selected");
           tbody.appendChild(row);
         });
       }
 
-      function selectTransaction(index, row) {
-        selectedIndex = index;
-        document
-          .querySelectorAll("tbody tr")
-          .forEach((r) => r.classList.remove("selected"));
-        row.classList.add("selected");
-      }
-
-      function uploadBill() {
+      async function uploadBill() {
         const input = document.getElementById("billInput");
+
         if (!input.files.length) {
           alert("Choose a bill first");
           return;
@@ -185,16 +248,36 @@
         const formData = new FormData();
         formData.append("bill", input.files[0]);
 
-        fetch("/upload-bill", {
-          method: "POST",
-          body: formData,
-        })
-          .then((res) => res.json())
-          .then((result) => {
-            currentBill = result.data.parsed;
-            renderEditableBill(currentBill);
-            input.value = "";
+        try {
+          const res = await fetch("/upload-bill", {
+            method: "POST",
+            body: formData,
           });
+
+          const result = await res.json();
+
+          console.log("OCR RESULT:", result);
+
+          if (!result.success) {
+            alert(result.message || "Processing failed");
+            return;
+          }
+
+          currentBill = result.data.parsed;
+          renderEditableBill(currentBill);
+
+          input.value = "";
+        } catch (err) {
+          console.error(err);
+          alert("Upload failed");
+        }
+      }
+      function selectTransaction(index, row) {
+        selectedIndex = index;
+        document
+          .querySelectorAll("tbody tr")
+          .forEach((r) => r.classList.remove("selected"));
+        row.classList.add("selected");
       }
 
       function manualTransaction() {
@@ -211,43 +294,44 @@
 
       function renderEditableBill(data) {
         const out = document.getElementById("output");
-
         out.innerHTML = `
-        <b>Merchant</b>
-        <input class="edit-input" id="vendor" value="${data.vendor}">
+<b>Merchant</b>
+<input class="edit-input" id="vendor" value="${data.vendor}">
+<b>Date</b>
+<input class="edit-input" type="date" id="date" value="${formatDateForInput(data.date)}">
 
-        <b>Date</b>
-        <input class="edit-input" type="date" id="date" value="${data.date}">
+<table>
+<tr><th>Item</th><th>Qty</th><th>Price</th></tr>
 
-        <table>
-            <tr><th>Item</th><th>Qty</th><th>Price</th></tr>
-            ${data.items
-              .map(
-                (i, idx) => `
-                <tr>
-                    <td><input class="edit-input" id="name-${idx}" value="${i.name}"></td>
-                    <td><input class="edit-input" type="number" id="qty-${idx}" value="${i.qty}"
-                        oninput="recalculate(${data.items.length})"></td>
-                    <td><input class="edit-input" type="number" id="price-${idx}" value="${i.price}"
-                        oninput="recalculate(${data.items.length})"></td>
-                </tr>
-            `
-              )
-              .join("")}
-        </table>
+${data.items
+  .map(
+    (i, idx) => `
+<tr>
+<td><input class="edit-input" id="name-${idx}" value="${i.name}"></td>
+<td><input class="edit-input" type="number" id="qty-${idx}" value="${i.qty}" oninput="recalculate(${data.items.length})"></td>
+<td><input class="edit-input" type="number" id="price-${idx}" value="${i.price}" oninput="recalculate(${data.items.length})"></td>
+</tr>`,
+  )
+  .join("")}
 
-        <b>Subtotal</b>
-        <input class="edit-input" id="subtotal" value="${data.subtotal}">
+</table>
 
-        <b>Tax</b>
-        <input class="edit-input" id="tax" value="${data.tax}"
-            oninput="recalculate(${data.items.length})">
+<button class="action" onclick="addItem()">+ Add Item</button>
 
-        <b>Total</b>
-        <input class="edit-input" id="total" value="${data.total}">
+<b>Subtotal</b>
+<input class="edit-input" id="subtotal" value="${data.subtotal}">
+<b>Tax</b>
+<input class="edit-input" id="tax" value="${data.tax}" oninput="recalculate(${data.items.length})">
+<b>Total</b>
+<input class="edit-input" id="total" value="${data.total}">
 
-        <button onclick="saveTransaction()">Save Transaction</button>
-    `;
+<button class="action" onclick="saveTransaction()">Save Transaction</button>
+`;
+      }
+
+      function addItem() {
+        currentBill.items.push({ name: "", qty: 1, price: 0 });
+        renderEditableBill(currentBill);
       }
 
       function recalculate(count) {
@@ -264,44 +348,62 @@
         document.getElementById("total").value = (subtotal + tax).toFixed(2);
       }
 
-      function saveTransaction() {
+      async function saveTransaction() {
+        const userId = localStorage.getItem("userId");
         const transaction = {
-        vendor: document.getElementById("vendor").value,
-        date: document.getElementById("date").value,
-        total: Number(document.getElementById("total").value),
-        category: "",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
+          userId: userId,
+          vendor: document.getElementById("vendor").value,
+          date: document.getElementById("date").value,
+          total: Number(document.getElementById("total").value),
+          category: "",
+        };
 
-    if (!transaction.vendor || !transaction.date || !transaction.total) {
-        alert("Fill all fields");
-        return;
-    }
+        if (!transaction.vendor || !transaction.date || !transaction.total) {
+          alert("Fill all fields");
+          return;
+        }
 
-    db.collection("transactions").add(transaction)
-      .then(() => {
+        const res = await fetch("/add-transaction", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(transaction),
+        });
+
+        const data = await res.json();
+        if (data.success) {
           alert("Transaction saved");
           document.getElementById("output").innerHTML = "";
-      })
-      .catch(err => {
-          alert("Error saving transaction");
-          console.error(err);
-      });
-}
+          loadTransactions();
+        }
+      }
 
-      function deleteTransaction() {
+      async function loadTransactions() {
+        const userId = localStorage.getItem("userId");
+        const res = await fetch(`/transactions?userId=${userId}`);
+        const data = await res.json();
+        transactions = data.data || [];
+        selectedIndex = null;
+        renderTransactions();
+      }
+
+      async function deleteTransaction() {
         if (selectedIndex === null) {
           alert("Select a transaction to delete");
           return;
         }
+        const id = transactions[selectedIndex].id;
         if (confirm("Delete selected transaction?")) {
-          transactions.splice(selectedIndex, 1);
-          selectedIndex = null;
-          renderTransactions();
+          await fetch("/delete-transaction", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+          });
+          loadTransactions();
         }
       }
 
-      renderTransactions();
+      loadTransactions();
     </script>
   </body>
 </html>
+
