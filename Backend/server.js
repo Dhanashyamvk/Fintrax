@@ -9,6 +9,21 @@ const db = require("./db");
 const app = express();
 const PORT = 3000;
 
+const { exec } = require("child_process");
+function getAI(desc, amount, month) {
+  return new Promise((resolve, reject) => {
+    exec(`python ai/predict.py "${desc}" ${amount} ${month}`, (err, stdout) => {
+      if (err) return reject(err);
+
+      let [category, confidence, future, insight, recommendation] = stdout
+        .trim()
+        .split("|");
+
+      resolve({ category, confidence, future, insight, recommendation });
+    });
+  });
+}
+
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -83,25 +98,25 @@ app.post("/upload-bill", async (req, res) => {
         message: "No file uploaded",
       });
     }
-    
+
     const billFile = req.files.bill;
     const uploadDir = path.join(__dirname, "uploads");
-    
+
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir);
     }
 
     const uploadPath = path.join(uploadDir, `${Date.now()}-${billFile.name}`);
-    
+
     await billFile.mv(uploadPath);
     const result = await extractAndParseBill({
       imagePath: uploadPath,
     });
-    
+
     if (fs.existsSync(uploadPath)) {
       fs.unlinkSync(uploadPath);
     }
-    
+
     res.send({
       success: true,
       data: {
@@ -207,14 +222,25 @@ app.post("/update-category", async (req, res) => {
 
 app.post("/add-transaction", async (req, res) => {
   try {
-    const { userId, vendor, date, total, category } = req.body;
+    const { userId, vendor, date, total } = req.body;
+
+    // 🔥 Extract month from date for AI
+    const month = new Date(date).getMonth() + 1;
+
+    // 🔥 CALL LOCAL AI
+    const ai = await getAI(vendor, total, month);
+
+    console.log("AI RESULT:", ai);
 
     await db.execute(
       "INSERT INTO transactions (user_id, vendor, date, total, category) VALUES (?, ?, ?, ?, ?)",
-      [userId, vendor, date, total, category || ""],
+      [userId, vendor, date, total, ai.category],
     );
 
-    res.send({ success: true });
+    res.send({
+      success: true,
+      ai,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send({ success: false });
@@ -262,6 +288,60 @@ app.get("/recommendations-data", async (req, res) => {
     res.send({ success: true, data: rows });
   } catch (err) {
     console.error(err);
+    res.status(500).send({ success: false });
+  }
+});
+app.get("/ai-recommendations", async (req, res) => {
+  try {
+    const userId = req.query.userId;
+
+    const [rows] = await db.execute(
+      "SELECT category, SUM(total) as amount FROM transactions WHERE user_id=? GROUP BY category",
+      [userId],
+    );
+
+    let recommendations = [];
+    let seen = new Set();
+    let totalFuture = 0;
+
+    for (const r of rows) {
+      try {
+        const ai = await getAI(r.category, r.amount, 1);
+
+        totalFuture += Number(ai.future || 0);
+
+        const rec = ai.recommendation;
+
+        if (
+          rec &&
+          rec !== "None" &&
+          typeof rec === "string" &&
+          rec.trim() !== "" &&
+          !seen.has(rec)
+        ) {
+          seen.add(rec);
+          recommendations.push(rec);
+        }
+      } catch (aiErr) {
+        console.log("AI ERROR:", aiErr);
+      }
+    }
+
+    if (recommendations.length > 1) {
+      recommendations = recommendations.filter(
+        (r) => r !== "Spending behaviour looks balanced.",
+      );
+    }
+
+    recommendations = recommendations.slice(0, 4);
+
+    res.send({
+      success: true,
+      recommendations,
+      totalFuture: totalFuture.toFixed(2),
+    });
+  } catch (err) {
+    console.error("RECOMMENDATION ROUTE ERROR:", err);
     res.status(500).send({ success: false });
   }
 });
