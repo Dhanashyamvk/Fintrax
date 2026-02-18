@@ -1,0 +1,142 @@
+description,amount,month,category
+Zomato order,250,1,Food
+Swiggy dinner,420,1,Food
+KFC meal,380,2,Food
+Dominos pizza,560,3,Food
+Starbucks coffee,210,4,Food
+Cafe Coffee Day,190,5,Food
+Local biryani shop,480,6,Food
+Ice cream parlour,150,7,Food
+Tea stall payment,40,8,Food
+Restaurant family dinner,1200,9,Food
+Food court mall,650,10,Food
+Pizza Hut order,520,11,Food
+Burger King meal,350,12,Food
+McDonalds combo,300,1,Food
+Chai Point tea,90,2,Food
+Subway sandwich,270,3,Food
+Sushi restaurant bill,1100,4,Food
+Fine dine dinner,2600,5,Food
+Uber ride,180,1,Transport
+Ola cab,240,2,Transport
+Metro ticket,60,3,Transport
+Bus pass,1200,4,Transport
+Petrol pump,1500,5,Transport
+Auto rickshaw,120,6,Transport
+Parking fee mall,60,7,Transport
+Taxi airport,850,8,Transport
+Fuel station HP,2000,9,Transport
+Car service center,5500,10,Transport
+Train ticket IRCTC,900,11,Transport
+Flight Indigo booking,6200,12,Transport
+Bike repair shop,700,1,Transport
+Tyre replacement,3200,2,Transport
+Amazon purchase,900,2,Shopping
+Flipkart order,1200,3,Shopping
+Myntra clothing,2200,5,Shopping
+Ajio fashion,1800,6,Shopping
+Reliance Digital gadget,4500,7,Shopping
+IKEA furniture,6500,8,Shopping
+Croma electronics,15000,9,Shopping
+Samsung store phone,22000,10,Shopping
+Home Centre decor,3200,11,Shopping
+Local electronics shop,2800,12,Shopping
+Apple store ipad,45000,1,Shopping
+Nike shoes purchase,7000,2,Shopping
+Electricity bill,1200,2,Utilities
+Water bill,400,3,Utilities
+Gas refill,950,4,Utilities
+Internet bill Airtel,799,5,Utilities
+Mobile recharge Jio,299,6,Utilities
+Dish TV recharge,250,7,Utilities
+Broadband installation,1800,8,Utilities
+Solar maintenance,900,9,Utilities
+Power backup repair,1100,10,Utilities
+Water purifier service,800,11,Utilities
+Cable TV payment,350,12,Utilities
+Netflix subscription,499,1,Entertainment
+Prime Video,179,2,Entertainment
+BookMyShow tickets,850,3,Entertainment
+Spotify premium,119,4,Entertainment
+Hotstar subscription,299,5,Entertainment
+Gaming zone recharge,600,6,Entertainment
+VR arcade session,1200,7,Entertainment
+Concert ticket,2500,8,Entertainment
+Theme park entry,3000,9,Entertainment
+Movie snacks counter,450,10,Entertainment
+Amusement park ride,700,11,Entertainment
+Bowling alley game,650,12,Entertainment
+PlayStation game purchase,3999,1,Entertainment
+Steam gaming wallet,1500,2,Entertainment
+Apollo pharmacy,750,1,Health
+Medical store purchase,320,2,Health
+Doctor consultation,900,3,Health
+Lab test payment,1200,4,Health
+Health insurance,3500,5,Health
+Dental clinic visit,1500,6,Health
+Eye checkup,900,7,Health
+Vaccination charge,600,8,Health
+Physiotherapy session,1100,9,Health
+Nutrition consultation,800,10,Health
+Gym membership,1800,11,Health
+Yoga class fee,1200,12,Health
+Protein supplement store,3500,1,Health
+Udemy course,1500,1,Education
+Coursera subscription,2200,2,Education
+Bookstore purchase,600,3,Education
+Exam fee payment,1800,4,Education
+Online training program,3200,5,Education
+Coding bootcamp fee,10000,6,Education
+Workshop registration,2500,7,Education
+Library membership,700,8,Education
+Stationery shop purchase,300,9,Education
+Online exam fee,1200,10,Education
+School fee payment,8000,11,Education
+College admission fee,15000,12,Education
+IRCTC train ticket,1100,1,Travel
+Flight booking Indigo,5200,2,Travel
+Hotel booking OYO,3400,3,Travel
+MakeMyTrip package,7800,4,Travel
+Redbus ticket,950,5,Travel
+Resort stay booking,12000,6,Travel
+Holiday package Goa,25000,7,Travel
+Tourist visa fee,4500,8,Travel
+Cruise booking,35000,9,Travel
+Travel insurance,1800,10,Travel
+Airbnb stay,6000,11,Travel
+Local sightseeing tour,2200,12,Travel
+BigBasket groceries,2400,1,Groceries
+Reliance Fresh shopping,1300,2,Groceries
+More supermarket bill,900,3,Groceries
+DMart purchase,2100,4,Groceries
+Local grocery shop,600,5,Groceries
+Vegetable market,450,6,Groceries
+Fruit shop purchase,350,7,Groceries
+Organic store bill,1200,8,Groceries
+Milk subscription,700,9,Groceries
+Bakery items,500,10,Groceries
+Frozen foods store,950,11,Groceries
+Wholesale groceries,3000,12,Groceries
+House rent payment,12000,1,Rent
+Apartment rent,15000,2,Rent
+PG rent payment,8000,3,Rent
+Hostel rent,5000,4,Rent
+Flat maintenance charge,2500,5,Rent
+Office rent,22000,6,Rent
+Parking rent space,1500,7,Rent
+Warehouse rent,30000,8,Rent
+Commercial rent,45000,9,Rent
+Villa rent payment,35000,10,Rent
+Studio apartment rent,18000,11,Rent
+Security deposit rent,50000,12,Rent
+Google One storage,130,2,Subscription
+Canva premium,499,3,Subscription
+Adobe plan,1675,4,Subscription
+Microsoft 365,4899,5,Subscription
+Dropbox storage,800,6,Subscription
+Notion AI plan,320,7,Subscription
+ChatGPT Plus,1600,8,Subscription
+Zoom subscription,1499,9,Subscription
+Slack premium,1100,10,Subscription
+Figma professional,1200,11,Subscription
+Cloud hosting AWS,2500,12,Subscription
