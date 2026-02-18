@@ -160,7 +160,15 @@
         </div>
       </div>
 
-      <div class="card" id="recommendationsBox"></div>
+      <div class="card">
+        <h2>Smart Recommendations</h2>
+        <div id="recommendationsBox"></div>
+      </div>
+
+      <div class="card">
+        <h2>Future Spending Predictions</h2>
+        <div id="futureBox"></div>
+      </div>
     </div>
 
     <script>
@@ -188,45 +196,43 @@
 
       async function generateRecommendations() {
         const userId = localStorage.getItem("userId");
-        const box = document.getElementById("recommendationsBox");
 
-        const res = await fetch(`/recommendations-data?userId=${userId}`);
-        const data = await res.json();
+        const recBox = document.getElementById("recommendationsBox");
+        const futureBox = document.getElementById("futureBox");
 
-        box.innerHTML = "";
+        recBox.innerHTML = `<div class="recommendation">Loading AI...</div>`;
+        futureBox.innerHTML = `<div class="recommendation">Loading predictions...</div>`;
 
-        if (!data.data || data.data.length === 0) {
-          box.innerHTML = `<div class="recommendation">No spending data available yet.</div>`;
-          return;
-        }
+        try {
+          const res = await fetch(`/ai-recommendations?userId=${userId}`);
+          const data = await res.json();
 
-        data.data.forEach((e) => {
-          if (e.amount > 5000) {
-            box.innerHTML += `
-<div class="recommendation">
-⚠ You are spending heavily on <span>${e.category}</span>. Try setting a monthly limit to save more.
-</div>
-`;
+          recBox.innerHTML = "";
+          futureBox.innerHTML = "";
+
+          if (!data.recommendations || data.recommendations.length === 0) {
+            recBox.innerHTML = `<div class="recommendation">No AI recommendations yet.</div>`;
+          } else {
+            data.recommendations.forEach((text) => {
+              recBox.innerHTML += `
+          <div class="recommendation">
+             ${text}
+          </div>
+        `;
+            });
           }
-        });
 
-        box.innerHTML += `
-<div class="recommendation">
-💡 Track your expenses daily to avoid last-minute overspending.
-</div>
-`;
+          futureBox.innerHTML = `
+      <div class="recommendation">
+         Total Predicted Future Spending: ₹${Number(data.totalFuture || 0).toFixed(2)}
+      </div>
+    `;
+        } catch (err) {
+          console.error("AI ERROR:", err);
 
-        box.innerHTML += `
-<div class="recommendation">
-💰 Consider allocating at least <span>20%</span> of your income to savings.
-</div>
-`;
-
-        box.innerHTML += `
-<div class="recommendation">
-📊 Review your spending patterns every month for better control.
-</div>
-`;
+          recBox.innerHTML = `<div class="recommendation">Failed to load AI recommendations.</div>`;
+          futureBox.innerHTML = `<div class="recommendation">Failed to load predictions.</div>`;
+        }
       }
 
       generateRecommendations();
