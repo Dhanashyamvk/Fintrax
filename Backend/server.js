@@ -80,7 +80,7 @@ app.post("/login", async (req, res) => {
 
     res.send({
       success: true,
-      userId: user.id, // ⭐ send user id
+      userId: user.id,
       redirect: "/home.html",
     });
   } catch (err) {
