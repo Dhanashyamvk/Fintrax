@@ -82,13 +82,14 @@
         margin: 0;
         font-size: 38px;
       }
+
       .title p {
         margin-top: 5px;
         color: #8aa0b4;
       }
 
       .stats {
-        margin-top: 35px;
+        margin-top: 30px;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 25px;
@@ -96,21 +97,17 @@
 
       .card {
         background: linear-gradient(145deg, #101b2e, #0c1626);
-        border-radius: 25px;
-        padding: 28px;
+        border-radius: 20px;
+        padding: 20px;
         border: 1px solid #1b2e46;
         text-align: center;
       }
 
-      .card h4 {
-        margin: 0;
-        color: #8aa0b4;
-        font-weight: 500;
-      }
-
-      .card h2 {
-        margin-top: 10px;
-        font-size: 28px;
+      #patternsContainer {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
       }
 
       .insight {
@@ -121,6 +118,16 @@
         border: 1px solid #1b2e46;
         text-align: center;
         color: #c7d7ea;
+        font-size: 16px;
+      }
+
+      .remaining {
+        color: #21c7ea;
+      }
+
+      .overspent {
+        color: red;
+        font-weight: bold;
       }
     </style>
   </head>
@@ -150,6 +157,8 @@
         <p>Understand where your money goes</p>
       </div>
 
+      <!-- TOP STATS FIRST -->
+
       <div class="stats">
         <div class="card">
           <h4>Total Spending</h4>
@@ -166,6 +175,12 @@
           <h2 id="average">₹0</h2>
         </div>
       </div>
+
+      <!-- CATEGORY BUDGET CARDS -->
+
+      <div id="patternsContainer"></div>
+
+      <!-- INSIGHT -->
 
       <div class="insight" id="insight">Loading insights...</div>
     </div>
@@ -193,38 +208,84 @@
         window.location.href = "recommendations.html";
       }
 
-      async function analyzePatterns() {
+      async function loadPatterns() {
         const userId = localStorage.getItem("userId");
 
-        const res = await fetch(`/patterns-data?userId=${userId}`);
+        const res = await fetch(`/budget-data?userId=${userId}`);
         const data = await res.json();
 
-        const total = data.total || 0;
-        const categories = data.categories || [];
+        const limits = data.limits;
+        const spent = data.spent;
 
-        document.getElementById("total").innerText = "₹" + total;
+        const container = document.getElementById("patternsContainer");
+        container.innerHTML = "";
 
-        if (categories.length === 0) {
-          document.getElementById("insight").innerText =
-            "No spending data yet.";
-          return;
+        let totalSpending = 0;
+        let topCategory = "—";
+        let maxSpent = 0;
+
+        let alerts = [];
+
+        limits.forEach((b) => {
+          const s = spent.find((x) => x.category === b.category);
+
+          const spentAmount = s ? Number(s.spent) : 0;
+          const budgetAmount = Number(b.amount);
+
+          totalSpending += spentAmount;
+
+          if (spentAmount > maxSpent) {
+            maxSpent = spentAmount;
+            topCategory = b.category;
+          }
+
+          let statusHTML = "";
+
+          if (spentAmount > budgetAmount) {
+            const overspent = (spentAmount - budgetAmount).toFixed(2);
+
+            statusHTML = `<p class="overspent">Overspent: ₹${overspent}</p>`;
+
+            alerts.push(`⚠ ${b.category} exceeded budget by ₹${overspent}`);
+          } else {
+            const remaining = (budgetAmount - spentAmount).toFixed(2);
+
+            statusHTML = `<p class="remaining">Remaining: ₹${remaining}</p>`;
+          }
+
+          const color = spentAmount > budgetAmount ? "red" : "#21c7ea";
+
+          container.innerHTML += `
+
+<div class="card">
+<h3>${b.category}</h3>
+<p>Budget: ₹${budgetAmount.toFixed(2)}</p>
+<p style="color:${color}">Spent: ₹${spentAmount.toFixed(2)}</p>
+${statusHTML}
+</div>
+
+`;
+        });
+
+        document.getElementById("total").innerText =
+          `₹${totalSpending.toFixed(2)}`;
+        document.getElementById("topCategory").innerText = topCategory;
+
+        const avg = totalSpending > 0 ? (totalSpending / 30).toFixed(2) : 0;
+
+        document.getElementById("average").innerText = `₹${avg}`;
+
+        let insight = "Your spending is balanced.";
+
+        if (alerts.length > 0) {
+          insight = alerts.join(" | ");
+        } else if (maxSpent > 0) {
+          insight = `You spend the most on ${topCategory}. Consider optimizing this category.`;
         }
 
-        const top = categories[0];
-
-        document.getElementById("topCategory").innerText = top.category;
-        document.getElementById("average").innerText =
-          "₹" + Math.round(total / 30);
-
-        const insightText =
-          top.amount > 5000
-            ? `⚠ You are spending most on ${top.category}. Consider reducing it.`
-            : `✅ Your spending on ${top.category} is under control.`;
-
-        document.getElementById("insight").innerText = insightText;
+        document.getElementById("insight").innerText = insight;
       }
-
-      analyzePatterns();
+      loadPatterns();
     </script>
   </body>
 </html>
