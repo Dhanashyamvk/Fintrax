@@ -164,6 +164,7 @@
               <th>Category</th>
             </tr>
           </thead>
+
           <tbody id="categoryTable"></tbody>
         </table>
       </div>
@@ -173,21 +174,27 @@
       function logout() {
         window.location.href = "login.html";
       }
+
       function home() {
         window.location.href = "home.html";
       }
+
       function transaction() {
         window.location.href = "transaction.html";
       }
+
       function budget() {
         window.location.href = "budget.html";
       }
+
       function graphs() {
         window.location.href = "graphs.html";
       }
+
       function patterns() {
         window.location.href = "spend.html";
       }
+
       function recommendations() {
         window.location.href = "recommendations.html";
       }
@@ -217,20 +224,23 @@
         }
 
         data.data.forEach((t) => {
+          let category = categories.includes(t.category) ? t.category : "Other";
+
           const row = document.createElement("tr");
 
           row.innerHTML = `
-<td>${t.date}</td>
+
+<td>${new Date(t.date).toLocaleDateString()}</td>
 <td>${t.vendor}</td>
 <td>${t.total}</td>
-<td>
-<select onchange="updateCategory(${t.id},this.value)">
-<option value="">Select Category</option>
-${categories.map((c) => `<option ${t.category === c ? "selected" : ""}>${c}</option>`).join("")}
-</select>
-</td>
-`;
 
+<td>
+
+<select onchange="updateCategory(${t.id},this.value)">
+
+${categories.map((c) => `<option ${category === c ? "selected" : ""}>${c}</option>`).join("")}
+</select>
+</td>`;
           tbody.appendChild(row);
         });
       }
@@ -241,6 +251,8 @@ ${categories.map((c) => `<option ${t.category === c ? "selected" : ""}>${c}</opt
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id, category }),
         });
+
+        loadTransactions();
       }
 
       loadTransactions();
