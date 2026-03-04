@@ -157,8 +157,6 @@
         <p>Understand where your money goes</p>
       </div>
 
-      <!-- TOP STATS FIRST -->
-
       <div class="stats">
         <div class="card">
           <h4>Total Spending</h4>
@@ -176,11 +174,8 @@
         </div>
       </div>
 
-      <!-- CATEGORY BUDGET CARDS -->
 
       <div id="patternsContainer"></div>
-
-      <!-- INSIGHT -->
 
       <div class="insight" id="insight">Loading insights...</div>
     </div>
@@ -223,16 +218,18 @@
         let totalSpending = 0;
         let topCategory = "—";
         let maxSpent = 0;
-
         let alerts = [];
 
+        spent.forEach((s) => {
+          totalSpending += Number(s.spent);
+        });
+
+        // create category cards
         limits.forEach((b) => {
           const s = spent.find((x) => x.category === b.category);
 
           const spentAmount = s ? Number(s.spent) : 0;
           const budgetAmount = Number(b.amount);
-
-          totalSpending += spentAmount;
 
           if (spentAmount > maxSpent) {
             maxSpent = spentAmount;
@@ -245,7 +242,6 @@
             const overspent = (spentAmount - budgetAmount).toFixed(2);
 
             statusHTML = `<p class="overspent">Overspent: ₹${overspent}</p>`;
-
             alerts.push(`⚠ ${b.category} exceeded budget by ₹${overspent}`);
           } else {
             const remaining = (budgetAmount - spentAmount).toFixed(2);
@@ -256,15 +252,13 @@
           const color = spentAmount > budgetAmount ? "red" : "#21c7ea";
 
           container.innerHTML += `
-
-<div class="card">
-<h3>${b.category}</h3>
-<p>Budget: ₹${budgetAmount.toFixed(2)}</p>
-<p style="color:${color}">Spent: ₹${spentAmount.toFixed(2)}</p>
-${statusHTML}
-</div>
-
-`;
+      <div class="card">
+        <h3>${b.category}</h3>
+        <p>Budget: ₹${budgetAmount.toFixed(2)}</p>
+        <p style="color:${color}">Spent: ₹${spentAmount.toFixed(2)}</p>
+        ${statusHTML}
+      </div>
+    `;
         });
 
         document.getElementById("total").innerText =
@@ -272,7 +266,6 @@ ${statusHTML}
         document.getElementById("topCategory").innerText = topCategory;
 
         const avg = totalSpending > 0 ? (totalSpending / 30).toFixed(2) : 0;
-
         document.getElementById("average").innerText = `₹${avg}`;
 
         let insight = "Your spending is balanced.";
