@@ -204,29 +204,41 @@
         futureBox.innerHTML = `<div class="recommendation">Loading predictions...</div>`;
 
         try {
-          const res = await fetch(`/ai-recommendations?userId=${userId}`);
-          const data = await res.json();
+          const recRes = await fetch(`/ai-recommendations?userId=${userId}`);
+          const recData = await recRes.json();
+
+          const futureRes = await fetch(`/future-spending?userId=${userId}`);
+          const futureData = await futureRes.json();
 
           recBox.innerHTML = "";
           futureBox.innerHTML = "";
 
-          if (!data.recommendations || data.recommendations.length === 0) {
+          if (
+            !recData.recommendations ||
+            recData.recommendations.length === 0
+          ) {
             recBox.innerHTML = `<div class="recommendation">No AI recommendations yet.</div>`;
           } else {
-            data.recommendations.forEach((text) => {
-              recBox.innerHTML += `
-          <div class="recommendation">
-             ${text}
-          </div>
-        `;
+            recData.recommendations.forEach((text) => {
+              const lines = text.split("\n");
+
+              let html = `<div class="recommendation">`;
+
+              lines.forEach((line) => {
+                html += `<div>${line}</div>`;
+              });
+
+              html += `</div>`;
+
+              recBox.innerHTML += html;
             });
           }
 
           futureBox.innerHTML = `
-      <div class="recommendation">
-         Total Predicted Future Spending: ₹${Number(data.totalFuture || 0).toFixed(2)}
-      </div>
-    `;
+<div class="recommendation">
+Total Predicted Future Spending: ₹${Number(futureData.prediction || 0).toFixed(2)}
+</div>
+`;
         } catch (err) {
           console.error("AI ERROR:", err);
 
@@ -234,7 +246,6 @@
           futureBox.innerHTML = `<div class="recommendation">Failed to load predictions.</div>`;
         }
       }
-
       generateRecommendations();
     </script>
   </body>
