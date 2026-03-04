@@ -37,12 +37,8 @@ async function extractAndParseBill({ imagePath }) {
 
 function isTicket(lines) {
   const text = lines.join(" ").toLowerCase();
-
-  // ✈️ Flight ticket indicators
   const flight =
     /boarding pass|flight no|gate\s*\d|seat\s*[0-9]/i.test(text);
-
-  // 🚆 Railway ticket indicators (VERY strict)
   const railway =
     /(indian railway|western railway|railway ticket|uts\s*ticket)/i.test(text);
 
@@ -60,12 +56,12 @@ function parseBill(rawText) {
   const items = ticket ? [] : getItems(lines);
 
   return {
-    vendor: getVendor(lines), // ✅ now works for tickets
+    vendor: getVendor(lines), 
     date: getDate(lines),
     items,
     subtotal: ticket ? null : getSubtotal(lines, items),
     tax: ticket ? null : getTax(lines),
-    total: getTotal(lines), // ✅ ticket price now extracted
+    total: getTotal(lines), 
     payment_mode: getPaymentMode(lines),
   };
 }
@@ -88,8 +84,6 @@ function getVendor(lines) {
     }
     return "Airline Ticket";
   }
-
-  // 🚆 Indian railway tickets ONLY if ticket detected
   if (
     ticket &&
     /western railway|indian railway|railway ticket|uts|happy journey/i.test(
@@ -99,7 +93,6 @@ function getVendor(lines) {
     return "Indian Railways";
   }
 
-  // 🧾 Normal bills
   for (const l of lines.slice(0, 6)) {
     if (
       !/gst|invoice|bill|date|phone|www|@|address|room/i.test(l) &&
@@ -200,7 +193,6 @@ function getTax(lines) {
 }
 
 function getTotal(lines) {
-  // 🧾 Normal bill totals
   for (let i = lines.length - 1; i >= 0; i--) {
     const line = lines[i].toLowerCase();
 
@@ -210,17 +202,15 @@ function getTotal(lines) {
     }
   }
 
-  // 🚆 Train ticket price (handles broken OCR)
   for (const l of lines) {
     if (/cash/i.test(l)) {
       const nums = l.match(/\d+/g);
       if (nums && nums.length) {
-        return Number(nums[nums.length - 1]); // last number near CASH
+        return Number(nums[nums.length - 1]); 
       }
     }
   }
 
-  // fallback rs detection
   for (const l of lines) {
     const m = l.match(/rs\.?\s*[:\-]?\s*(\d+)/i);
     if (m) return Number(m[1]);
