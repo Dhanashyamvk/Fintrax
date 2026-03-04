@@ -2,13 +2,16 @@
 <html>
   <head>
     <title>Graphs | Fintrax</title>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
       body {
         margin: 0;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
         background: #050c18;
         color: white;
         display: flex;
@@ -96,6 +99,15 @@
         width: 100%;
         height: 300px;
       }
+
+      #pieChart {
+        max-height: 600px;
+      }
+
+      #barChart{
+        max-height: 600px;
+      }
+
     </style>
   </head>
 
@@ -221,9 +233,7 @@
             datasets: [
               {
                 data: values,
-                backgroundColor: labels.map(
-                  (_, i) => `hsl(${i * 70},70%,60%)`
-                ),
+                backgroundColor: labels.map((_, i) => `hsl(${i * 70},80%,60%)`),
               },
             ],
           },
