@@ -17,20 +17,20 @@ Chai Point tea,90,2,Food
 Subway sandwich,270,3,Food
 Sushi restaurant bill,1100,4,Food
 Fine dine dinner,2600,5,Food
-Uber ride,180,1,Transport
-Ola cab,240,2,Transport
-Metro ticket,60,3,Transport
-Bus pass,1200,4,Transport
-Petrol pump,1500,5,Transport
-Auto rickshaw,120,6,Transport
-Parking fee mall,60,7,Transport
-Taxi airport,850,8,Transport
-Fuel station HP,2000,9,Transport
-Car service center,5500,10,Transport
-Train ticket IRCTC,900,11,Transport
-Flight Indigo booking,6200,12,Transport
-Bike repair shop,700,1,Transport
-Tyre replacement,3200,2,Transport
+Uber ride,180,1,Other
+Ola cab,240,2,Other
+Metro ticket,60,3,Other
+Bus pass,1200,4,Other
+Petrol pump,1500,5,Other
+Auto rickshaw,120,6,Other
+Parking fee mall,60,7,Other
+Taxi airport,850,8,Other
+Fuel station HP,2000,9,Other
+Car service center,5500,10,Other
+Train ticket IRCTC,900,11,Other
+Flight Indigo booking,6200,12,Other
+Bike repair shop,700,1,Other
+Tyre replacement,3200,2,Other
 Amazon purchase,900,2,Shopping
 Flipkart order,1200,3,Shopping
 Myntra clothing,2200,5,Shopping
@@ -54,45 +54,45 @@ Solar maintenance,900,9,Utilities
 Power backup repair,1100,10,Utilities
 Water purifier service,800,11,Utilities
 Cable TV payment,350,12,Utilities
-Netflix subscription,499,1,Entertainment
-Prime Video,179,2,Entertainment
-BookMyShow tickets,850,3,Entertainment
-Spotify premium,119,4,Entertainment
-Hotstar subscription,299,5,Entertainment
-Gaming zone recharge,600,6,Entertainment
-VR arcade session,1200,7,Entertainment
-Concert ticket,2500,8,Entertainment
-Theme park entry,3000,9,Entertainment
-Movie snacks counter,450,10,Entertainment
-Amusement park ride,700,11,Entertainment
-Bowling alley game,650,12,Entertainment
-PlayStation game purchase,3999,1,Entertainment
-Steam gaming wallet,1500,2,Entertainment
-Apollo pharmacy,750,1,Health
-Medical store purchase,320,2,Health
-Doctor consultation,900,3,Health
-Lab test payment,1200,4,Health
-Health insurance,3500,5,Health
-Dental clinic visit,1500,6,Health
-Eye checkup,900,7,Health
-Vaccination charge,600,8,Health
-Physiotherapy session,1100,9,Health
-Nutrition consultation,800,10,Health
-Gym membership,1800,11,Health
-Yoga class fee,1200,12,Health
-Protein supplement store,3500,1,Health
-Udemy course,1500,1,Education
-Coursera subscription,2200,2,Education
-Bookstore purchase,600,3,Education
-Exam fee payment,1800,4,Education
-Online training program,3200,5,Education
-Coding bootcamp fee,10000,6,Education
-Workshop registration,2500,7,Education
-Library membership,700,8,Education
-Stationery shop purchase,300,9,Education
-Online exam fee,1200,10,Education
-School fee payment,8000,11,Education
-College admission fee,15000,12,Education
+Netflix subscription,499,1,Other
+Prime Video,179,2,Other
+BookMyShow tickets,850,3,Other
+Spotify premium,119,4,Other
+Hotstar subscription,299,5,Other
+Gaming zone recharge,600,6,Other
+VR arcade session,1200,7,Other
+Concert ticket,2500,8,Other
+Theme park entry,3000,9,Other
+Movie snacks counter,450,10,Other
+Amusement park ride,700,11,Other
+Bowling alley game,650,12,Other
+PlayStation game purchase,3999,1,Other
+Steam gaming wallet,1500,2,Other
+Apollo pharmacy,750,1,Other
+Medical store purchase,320,2,Other
+Doctor consultation,900,3,Other
+Lab test payment,1200,4,Other
+Health insurance,3500,5,Other
+Dental clinic visit,1500,6,Other
+Eye checkup,900,7,Other
+Vaccination charge,600,8,Other
+Physiotherapy session,1100,9,Other
+Nutrition consultation,800,10,Other
+Gym membership,1800,11,Other
+Yoga class fee,1200,12,Other
+Protein supplement store,3500,1,Other
+Udemy course,1500,1,Other
+Coursera subscription,2200,2,Other
+Bookstore purchase,600,3,Other
+Exam fee payment,1800,4,Other
+Online training program,3200,5,Other
+Coding bootcamp fee,10000,6,Other
+Workshop registration,2500,7,Other
+Library membership,700,8,Other
+Stationery shop purchase,300,9,Other
+Online exam fee,1200,10,Other
+School fee payment,8000,11,Other
+College admission fee,15000,12,Other
 IRCTC train ticket,1100,1,Travel
 Flight booking Indigo,5200,2,Travel
 Hotel booking OYO,3400,3,Travel
@@ -117,26 +117,26 @@ Milk subscription,700,9,Groceries
 Bakery items,500,10,Groceries
 Frozen foods store,950,11,Groceries
 Wholesale groceries,3000,12,Groceries
-House rent payment,12000,1,Rent
-Apartment rent,15000,2,Rent
-PG rent payment,8000,3,Rent
-Hostel rent,5000,4,Rent
-Flat maintenance charge,2500,5,Rent
-Office rent,22000,6,Rent
-Parking rent space,1500,7,Rent
-Warehouse rent,30000,8,Rent
-Commercial rent,45000,9,Rent
-Villa rent payment,35000,10,Rent
-Studio apartment rent,18000,11,Rent
-Security deposit rent,50000,12,Rent
-Google One storage,130,2,Subscription
-Canva premium,499,3,Subscription
-Adobe plan,1675,4,Subscription
-Microsoft 365,4899,5,Subscription
-Dropbox storage,800,6,Subscription
-Notion AI plan,320,7,Subscription
-ChatGPT Plus,1600,8,Subscription
-Zoom subscription,1499,9,Subscription
-Slack premium,1100,10,Subscription
-Figma professional,1200,11,Subscription
-Cloud hosting AWS,2500,12,Subscription
+House rent payment,12000,1,Other
+Apartment rent,15000,2,Other
+PG rent payment,8000,3,Other
+Hostel rent,5000,4,Other
+Flat maintenance charge,2500,5,Other
+Office rent,22000,6,Other
+Parking rent space,1500,7,Other
+Warehouse rent,30000,8,Other
+Commercial rent,45000,9,Other
+Villa rent payment,35000,10,Other
+Studio apartment rent,18000,11,Other
+Security deposit rent,50000,12,Other
+Google One storage,130,2,Other
+Canva premium,499,3,Other
+Adobe plan,1675,4,Other
+Microsoft 365,4899,5,Other
+Dropbox storage,800,6,Other
+Notion AI plan,320,7,Other
+ChatGPT Plus,1600,8,Other
+Zoom subscription,1499,9,Other
+Slack premium,1100,10,Other
+Figma professional,1200,11,Other
+Cloud hosting AWS,2500,12,Other
