@@ -212,6 +212,8 @@
 
           <input type="number" id="catLimit" placeholder="Limit Amount" />
 
+          <input type="month" id="budgetMonth" />
+
           <button class="action" onclick="addBudget()">Set Limit</button>
         </div>
       </div>
@@ -247,15 +249,26 @@
       async function addBudget() {
         const category = document.getElementById("cat").value;
         const amount = document.getElementById("catLimit").value;
+        const monthData = document.getElementById("budgetMonth").value;
+
+        const [year, month] = monthData.split("-");
+
         const userId = localStorage.getItem("userId");
 
         const res = await fetch("/set-budget", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, category, amount }),
+          body: JSON.stringify({
+            userId,
+            category,
+            amount,
+            month,
+            year,
+          }),
         });
 
         const data = await res.json();
+
         if (data.success) {
           loadBudgets();
         }
@@ -263,7 +276,12 @@
 
       async function loadBudgets() {
         const userId = localStorage.getItem("userId");
-        const res = await fetch(`/budget-data?userId=${userId}`);
+        const today = new Date();
+        const month = today.getMonth() + 1;
+        const year = today.getFullYear();
+        const res = await fetch(
+          `/budget-data?userId=${userId}&month=${month}&year=${year}`,
+        );
         const data = await res.json();
 
         const box = document.getElementById("budgetList");
